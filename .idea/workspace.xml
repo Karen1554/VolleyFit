@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de7d885f-3188-4762-99c2-3c535ef3a919" name="Changes" comment="primer commit">
+    <list default="true" id="de7d885f-3188-4762-99c2-3c535ef3a919" name="Changes" comment="Nuevos cambios :)">
       <change beforePath="$PROJECT_DIR$/../VolleyFit/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/club.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/club.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/entrenador.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/entrenador.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/entrenamiento.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/entrenamiento.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/jugador.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/jugador.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/jugador_entrenamientos.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/jugador_entrenamientos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/metricas.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/metricas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../VolleyFit/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +114,7 @@
       <workItem from="1761233236493" duration="1267000" />
       <workItem from="1761235745224" duration="9285000" />
       <workItem from="1761245985838" duration="473000" />
+      <workItem from="1761246482129" duration="1405000" />
     </task>
     <task id="LOCAL-00001" summary="primer commit">
       <option name="closed" value="true" />
@@ -146,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761241525022</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Nuevos cambios :)">
+      <option name="closed" value="true" />
+      <created>1761246751952</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1761246751952</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +168,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="&quot;Mi primer commit&quot;" />
     <MESSAGE value="primer commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="primer commit" />
+    <MESSAGE value="Nuevos cambios :)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nuevos cambios :)" />
   </component>
 </project>
