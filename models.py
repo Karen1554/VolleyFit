@@ -12,7 +12,6 @@ class Club(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str
     ciudad: str
-    pais: str
 
     jugadores: List["Jugador"] = Relationship(back_populates="club")
     entrenadores: List["Entrenador"] = Relationship(back_populates="club")

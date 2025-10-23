@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from db import get_session
 from models import JugadorEntrenamiento
+from datetime import datetime
 
 router = APIRouter(prefix="/jugador_entrenamientos", tags=["Jugador-Entrenamientos"])
 
@@ -16,15 +17,22 @@ def crear_relacion(relacion: JugadorEntrenamiento, session: Session = Depends(ge
 
 @router.get("/")
 def listar_relaciones(session: Session = Depends(get_session)):
-    return session.exec(select(JugadorEntrenamiento)).all()
+    statement = select(JugadorEntrenamiento).where(JugadorEntrenamiento.activo == True)
+    return session.exec(statement).all()
 
 
 @router.get("/{relacion_id}")
 def obtener_relacion(relacion_id: int, session: Session = Depends(get_session)):
     relacion = session.get(JugadorEntrenamiento, relacion_id)
-    if not relacion:
+    if not relacion or not relacion.activo:
         raise HTTPException(status_code=404, detail="Relación no encontrada")
     return relacion
+
+
+@router.get("/inactivos")
+def listar_relaciones_inactivas(session: Session = Depends(get_session)):
+    statement = select(JugadorEntrenamiento).where(JugadorEntrenamiento.activo == False)
+    return session.exec(statement).all()
 
 
 @router.put("/{relacion_id}")
@@ -37,9 +45,23 @@ def actualizar_relacion(relacion_id: int, relacion: JugadorEntrenamiento, sessio
     for key, value in relacion_data.items():
         setattr(db_relacion, key, value)
 
+    session.add(db_relacion)
     session.commit()
     session.refresh(db_relacion)
     return db_relacion
+
+
+@router.put("/recuperar/{relacion_id}")
+def recuperar_relacion(relacion_id: int, session: Session = Depends(get_session)):
+    relacion = session.get(JugadorEntrenamiento, relacion_id)
+    if not relacion:
+        raise HTTPException(status_code=404, detail="Relación no encontrada")
+    relacion.activo = True
+    relacion.fecha_inactivacion = None
+    session.add(relacion)
+    session.commit()
+    session.refresh(relacion)
+    return {"ok": True, "mensaje": "Relación restaurada correctamente"}
 
 
 @router.delete("/{relacion_id}")
@@ -47,6 +69,9 @@ def eliminar_relacion(relacion_id: int, session: Session = Depends(get_session))
     relacion = session.get(JugadorEntrenamiento, relacion_id)
     if not relacion:
         raise HTTPException(status_code=404, detail="Relación no encontrada")
-    session.delete(relacion)
+    relacion.activo = False
+    relacion.fecha_inactivacion = datetime.now().isoformat()
+    session.add(relacion)
     session.commit()
-    return {"ok": True, "mensaje": "Relación eliminada correctamente"}
+    session.refresh(relacion)
+    return {"ok": True, "mensaje": "Relación desactivada (soft delete)"}

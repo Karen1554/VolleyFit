@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from db import get_session
 from models import Entrenamiento
+from datetime import datetime
 
 router = APIRouter(prefix="/entrenamientos", tags=["Entrenamientos"])
 
@@ -16,15 +17,22 @@ def crear_entrenamiento(entrenamiento: Entrenamiento, session: Session = Depends
 
 @router.get("/")
 def listar_entrenamientos(session: Session = Depends(get_session)):
-    return session.exec(select(Entrenamiento)).all()
+    statement = select(Entrenamiento).where(Entrenamiento.activo == True)
+    return session.exec(statement).all()
 
 
 @router.get("/{entrenamiento_id}")
 def obtener_entrenamiento(entrenamiento_id: int, session: Session = Depends(get_session)):
     entrenamiento = session.get(Entrenamiento, entrenamiento_id)
-    if not entrenamiento:
+    if not entrenamiento or not entrenamiento.activo:
         raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
     return entrenamiento
+
+
+@router.get("/inactivos")
+def listar_entrenamientos_inactivos(session: Session = Depends(get_session)):
+    statement = select(Entrenamiento).where(Entrenamiento.activo == False)
+    return session.exec(statement).all()
 
 
 @router.put("/{entrenamiento_id}")
@@ -37,9 +45,23 @@ def actualizar_entrenamiento(entrenamiento_id: int, entrenamiento: Entrenamiento
     for key, value in entrenamiento_data.items():
         setattr(db_entrenamiento, key, value)
 
+    session.add(db_entrenamiento)
     session.commit()
     session.refresh(db_entrenamiento)
     return db_entrenamiento
+
+
+@router.put("/recuperar/{entrenamiento_id}")
+def recuperar_entrenamiento(entrenamiento_id: int, session: Session = Depends(get_session)):
+    entrenamiento = session.get(Entrenamiento, entrenamiento_id)
+    if not entrenamiento:
+        raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
+    entrenamiento.activo = True
+    entrenamiento.fecha_inactivacion = None
+    session.add(entrenamiento)
+    session.commit()
+    session.refresh(entrenamiento)
+    return {"ok": True, "mensaje": "Entrenamiento restaurado correctamente"}
 
 
 @router.delete("/{entrenamiento_id}")
@@ -47,6 +69,9 @@ def eliminar_entrenamiento(entrenamiento_id: int, session: Session = Depends(get
     entrenamiento = session.get(Entrenamiento, entrenamiento_id)
     if not entrenamiento:
         raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
-    session.delete(entrenamiento)
+    entrenamiento.activo = False
+    entrenamiento.fecha_inactivacion = datetime.now().isoformat()
+    session.add(entrenamiento)
     session.commit()
-    return {"ok": True}
+    session.refresh(entrenamiento)
+    return {"ok": True, "mensaje": "Entrenamiento desactivado (soft delete)"}
