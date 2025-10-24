@@ -6,7 +6,6 @@ from datetime import datetime
 
 router = APIRouter(prefix="/jugadores", tags=["Jugadores"])
 
-
 @router.post("/")
 def crear_jugador(jugador: Jugador, session: Session = Depends(get_session)):
     session.add(jugador)
@@ -35,7 +34,7 @@ def listar_jugadores_inactivos(session: Session = Depends(get_session)):
     return session.exec(statement).all()
 
 
-@router.put("/{jugador_id}")
+@router.patch("/{jugador_id}")
 def actualizar_jugador(jugador_id: int, jugador: Jugador, session: Session = Depends(get_session)):
     db_jugador = session.get(Jugador, jugador_id)
     if not db_jugador:
@@ -45,20 +44,20 @@ def actualizar_jugador(jugador_id: int, jugador: Jugador, session: Session = Dep
     for key, value in jugador_data.items():
         setattr(db_jugador, key, value)
 
-    session.add(db_jugador)
     session.commit()
     session.refresh(db_jugador)
     return db_jugador
 
 
-@router.put("/recuperar/{jugador_id}")
+@router.patch("/recuperar/{jugador_id}")
 def recuperar_jugador(jugador_id: int, session: Session = Depends(get_session)):
     jugador = session.get(Jugador, jugador_id)
     if not jugador:
         raise HTTPException(status_code=404, detail="Jugador no encontrado")
+
     jugador.activo = True
     jugador.fecha_inactivacion = None
-    session.add(jugador)
+
     session.commit()
     session.refresh(jugador)
     return {"ok": True, "mensaje": "Jugador restaurado correctamente"}
@@ -69,9 +68,10 @@ def eliminar_jugador(jugador_id: int, session: Session = Depends(get_session)):
     jugador = session.get(Jugador, jugador_id)
     if not jugador:
         raise HTTPException(status_code=404, detail="Jugador no encontrado")
+
     jugador.activo = False
     jugador.fecha_inactivacion = datetime.now().isoformat()
-    session.add(jugador)
+
     session.commit()
     session.refresh(jugador)
     return {"ok": True, "mensaje": "Jugador desactivado (soft delete)"}

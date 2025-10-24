@@ -6,72 +6,72 @@ from datetime import datetime
 
 router = APIRouter(prefix="/entrenamientos", tags=["Entrenamientos"])
 
-
 @router.post("/")
-def crear_entrenamiento(entrenamiento: Entrenamiento, session: Session = Depends(get_session)):
-    session.add(entrenamiento)
+def crear_relacion(relacion: JugadorEntrenamiento, session: Session = Depends(get_session)):
+    session.add(relacion)
     session.commit()
-    session.refresh(entrenamiento)
-    return entrenamiento
+    session.refresh(relacion)
+    return relacion
 
 
 @router.get("/")
-def listar_entrenamientos(session: Session = Depends(get_session)):
-    statement = select(Entrenamiento).where(Entrenamiento.activo == True)
+def listar_relaciones(session: Session = Depends(get_session)):
+    statement = select(JugadorEntrenamiento).where(JugadorEntrenamiento.activo == True)
     return session.exec(statement).all()
 
 
-@router.get("/{entrenamiento_id}")
-def obtener_entrenamiento(entrenamiento_id: int, session: Session = Depends(get_session)):
-    entrenamiento = session.get(Entrenamiento, entrenamiento_id)
-    if not entrenamiento or not entrenamiento.activo:
-        raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
-    return entrenamiento
+@router.get("/{relacion_id}")
+def obtener_relacion(relacion_id: int, session: Session = Depends(get_session)):
+    relacion = session.get(JugadorEntrenamiento, relacion_id)
+    if not relacion or not relacion.activo:
+        raise HTTPException(status_code=404, detail="Relación no encontrada")
+    return relacion
 
 
 @router.get("/inactivos")
-def listar_entrenamientos_inactivos(session: Session = Depends(get_session)):
-    statement = select(Entrenamiento).where(Entrenamiento.activo == False)
+def listar_relaciones_inactivas(session: Session = Depends(get_session)):
+    statement = select(JugadorEntrenamiento).where(JugadorEntrenamiento.activo == False)
     return session.exec(statement).all()
 
 
-@router.put("/{entrenamiento_id}")
-def actualizar_entrenamiento(entrenamiento_id: int, entrenamiento: Entrenamiento, session: Session = Depends(get_session)):
-    db_entrenamiento = session.get(Entrenamiento, entrenamiento_id)
-    if not db_entrenamiento:
-        raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
+@router.patch("/{relacion_id}")
+def actualizar_relacion(relacion_id: int, relacion: JugadorEntrenamiento, session: Session = Depends(get_session)):
+    db_relacion = session.get(JugadorEntrenamiento, relacion_id)
+    if not db_relacion:
+        raise HTTPException(status_code=404, detail="Relación no encontrada")
 
-    entrenamiento_data = entrenamiento.dict(exclude_unset=True)
-    for key, value in entrenamiento_data.items():
-        setattr(db_entrenamiento, key, value)
+    relacion_data = relacion.dict(exclude_unset=True)
+    for key, value in relacion_data.items():
+        setattr(db_relacion, key, value)
 
-    session.add(db_entrenamiento)
     session.commit()
-    session.refresh(db_entrenamiento)
-    return db_entrenamiento
+    session.refresh(db_relacion)
+    return db_relacion
 
 
-@router.put("/recuperar/{entrenamiento_id}")
-def recuperar_entrenamiento(entrenamiento_id: int, session: Session = Depends(get_session)):
-    entrenamiento = session.get(Entrenamiento, entrenamiento_id)
-    if not entrenamiento:
-        raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
-    entrenamiento.activo = True
-    entrenamiento.fecha_inactivacion = None
-    session.add(entrenamiento)
+@router.patch("/recuperar/{relacion_id}")
+def recuperar_relacion(relacion_id: int, session: Session = Depends(get_session)):
+    relacion = session.get(JugadorEntrenamiento, relacion_id)
+    if not relacion:
+        raise HTTPException(status_code=404, detail="Relación no encontrada")
+
+    relacion.activo = True
+    relacion.fecha_inactivacion = None
+
     session.commit()
-    session.refresh(entrenamiento)
-    return {"ok": True, "mensaje": "Entrenamiento restaurado correctamente"}
+    session.refresh(relacion)
+    return {"ok": True, "mensaje": "Relación restaurada correctamente"}
 
 
-@router.delete("/{entrenamiento_id}")
-def eliminar_entrenamiento(entrenamiento_id: int, session: Session = Depends(get_session)):
-    entrenamiento = session.get(Entrenamiento, entrenamiento_id)
-    if not entrenamiento:
-        raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
-    entrenamiento.activo = False
-    entrenamiento.fecha_inactivacion = datetime.now().isoformat()
-    session.add(entrenamiento)
+@router.delete("/{relacion_id}")
+def eliminar_relacion(relacion_id: int, session: Session = Depends(get_session)):
+    relacion = session.get(JugadorEntrenamiento, relacion_id)
+    if not relacion:
+        raise HTTPException(status_code=404, detail="Relación no encontrada")
+
+    relacion.activo = False
+    relacion.fecha_inactivacion = datetime.now().isoformat()
+
     session.commit()
-    session.refresh(entrenamiento)
-    return {"ok": True, "mensaje": "Entrenamiento desactivado (soft delete)"}
+    session.refresh(relacion)
+    return {"ok": True, "mensaje": "Relación desactivada (soft delete)"}

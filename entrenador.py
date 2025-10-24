@@ -35,7 +35,7 @@ def listar_entrenadores_inactivos(session: Session = Depends(get_session)):
     return session.exec(statement).all()
 
 
-@router.put("/{entrenador_id}")
+@router.patch("/{entrenador_id}")
 def actualizar_entrenador(entrenador_id: int, entrenador: Entrenador, session: Session = Depends(get_session)):
     db_entrenador = session.get(Entrenador, entrenador_id)
     if not db_entrenador:
@@ -45,20 +45,20 @@ def actualizar_entrenador(entrenador_id: int, entrenador: Entrenador, session: S
     for key, value in entrenador_data.items():
         setattr(db_entrenador, key, value)
 
-    session.add(db_entrenador)
     session.commit()
     session.refresh(db_entrenador)
     return db_entrenador
 
 
-@router.put("/recuperar/{entrenador_id}")
+@router.patch("/recuperar/{entrenador_id}")
 def recuperar_entrenador(entrenador_id: int, session: Session = Depends(get_session)):
     entrenador = session.get(Entrenador, entrenador_id)
     if not entrenador:
         raise HTTPException(status_code=404, detail="Entrenador no encontrado")
+
     entrenador.activo = True
     entrenador.fecha_inactivacion = None
-    session.add(entrenador)
+
     session.commit()
     session.refresh(entrenador)
     return {"ok": True, "mensaje": "Entrenador restaurado correctamente"}
@@ -69,9 +69,10 @@ def eliminar_entrenador(entrenador_id: int, session: Session = Depends(get_sessi
     entrenador = session.get(Entrenador, entrenador_id)
     if not entrenador:
         raise HTTPException(status_code=404, detail="Entrenador no encontrado")
+
     entrenador.activo = False
     entrenador.fecha_inactivacion = datetime.now().isoformat()
-    session.add(entrenador)
+
     session.commit()
     session.refresh(entrenador)
     return {"ok": True, "mensaje": "Entrenador desactivado (soft delete)"}

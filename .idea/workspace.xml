@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de7d885f-3188-4762-99c2-3c535ef3a919" name="Changes" comment="Nuevos cambios :)">
+    <list default="true" id="de7d885f-3188-4762-99c2-3c535ef3a919" name="Changes" comment="Arreglitos :(">
       <change beforePath="$PROJECT_DIR$/../VolleyFit/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VolleyFit/club.py" beforeDir="false" afterPath="$PROJECT_DIR$/../VolleyFit/club.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +115,9 @@
       <workItem from="1761233236493" duration="1267000" />
       <workItem from="1761235745224" duration="9285000" />
       <workItem from="1761245985838" duration="473000" />
-      <workItem from="1761246482129" duration="1405000" />
+      <workItem from="1761246482129" duration="4518000" />
+      <workItem from="1761255493701" duration="1332000" />
+      <workItem from="1761267319405" duration="2063000" />
     </task>
     <task id="LOCAL-00001" summary="primer commit">
       <option name="closed" value="true" />
@@ -148,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761246751952</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Arreglitos :(">
+      <option name="closed" value="true" />
+      <created>1761248113933</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1761248113933</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,6 +180,7 @@
     <MESSAGE value="&quot;Mi primer commit&quot;" />
     <MESSAGE value="primer commit" />
     <MESSAGE value="Nuevos cambios :)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nuevos cambios :)" />
+    <MESSAGE value="Arreglitos :(" />
+    <option name="LAST_COMMIT_MESSAGE" value="Arreglitos :(" />
   </component>
 </project>
