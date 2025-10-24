@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel, create_engine, Session
+import models
 
 sqlite_url = "sqlite:///./volleyfit.db"
 engine = create_engine(sqlite_url, echo=True)

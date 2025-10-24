@@ -35,7 +35,7 @@ def listar_relaciones_inactivas(session: Session = Depends(get_session)):
     return session.exec(statement).all()
 
 
-@router.put("/{relacion_id}")
+@router.patch("/{relacion_id}")
 def actualizar_relacion(relacion_id: int, relacion: JugadorEntrenamiento, session: Session = Depends(get_session)):
     db_relacion = session.get(JugadorEntrenamiento, relacion_id)
     if not db_relacion:
@@ -45,20 +45,20 @@ def actualizar_relacion(relacion_id: int, relacion: JugadorEntrenamiento, sessio
     for key, value in relacion_data.items():
         setattr(db_relacion, key, value)
 
-    session.add(db_relacion)
     session.commit()
     session.refresh(db_relacion)
     return db_relacion
 
 
-@router.put("/recuperar/{relacion_id}")
+@router.patch("/recuperar/{relacion_id}")
 def recuperar_relacion(relacion_id: int, session: Session = Depends(get_session)):
     relacion = session.get(JugadorEntrenamiento, relacion_id)
     if not relacion:
         raise HTTPException(status_code=404, detail="Relación no encontrada")
+
     relacion.activo = True
     relacion.fecha_inactivacion = None
-    session.add(relacion)
+
     session.commit()
     session.refresh(relacion)
     return {"ok": True, "mensaje": "Relación restaurada correctamente"}
@@ -69,9 +69,10 @@ def eliminar_relacion(relacion_id: int, session: Session = Depends(get_session))
     relacion = session.get(JugadorEntrenamiento, relacion_id)
     if not relacion:
         raise HTTPException(status_code=404, detail="Relación no encontrada")
+
     relacion.activo = False
     relacion.fecha_inactivacion = datetime.now().isoformat()
-    session.add(relacion)
+
     session.commit()
     session.refresh(relacion)
     return {"ok": True, "mensaje": "Relación desactivada (soft delete)"}
