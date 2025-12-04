@@ -12,7 +12,8 @@ class Club(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str
     ciudad: str
-
+    activo: bool
+    logo_url: Optional[str] = None
     jugadores: List["Jugador"] = Relationship(back_populates="club")
     entrenadores: List["Entrenador"] = Relationship(back_populates="club")
 
@@ -22,6 +23,7 @@ class Entrenador(SQLModel, table=True):
     nombre: str
     experiencia: int
     especialidad: str
+    activo: bool = True
     club_id: Optional[int] = Field(default=None, foreign_key="club.id")
 
     club: Optional[Club] = Relationship(back_populates="entrenadores")

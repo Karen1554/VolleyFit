@@ -35,6 +35,15 @@ def listar_entrenadores_inactivos(session: Session = Depends(get_session)):
     return session.exec(statement).all()
 
 
+@router.get("/por-club/{club_id}")
+def listar_entrenadores_por_club(club_id: int, session: Session = Depends(get_session)):
+    statement = select(Entrenador).where(Entrenador.club_id == club_id).where(Entrenador.activo == True)
+    entrenadores = session.exec(statement).all()
+    if not entrenadores:
+        return []
+    return entrenadores
+
+
 @router.patch("/{entrenador_id}")
 def actualizar_entrenador(entrenador_id: int, entrenador: Entrenador, session: Session = Depends(get_session)):
     db_entrenador = session.get(Entrenador, entrenador_id)
